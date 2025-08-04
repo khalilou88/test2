@@ -10,8 +10,8 @@
 	<description>Demo project for Spring Boot</description>
 
 	<modules>
-		<module>vault-ssl-bundle-spring-boot-starter</module>
-		<module>test-app</module>
+		<module>spring-boot-vault-ssl-bundle</module>
+		<module>spring-boot-vault-ssl-bundle-test-app</module>
 	</modules>
 
 </project>
