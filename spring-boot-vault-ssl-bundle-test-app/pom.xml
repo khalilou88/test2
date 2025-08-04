@@ -8,12 +8,12 @@
 	<parent>
 		<groupId>com.demo</groupId>
 		<artifactId>parent-project</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>${revision}</version>
 	</parent>
 
 	<groupId>com.demo</groupId>
 	<artifactId>spring-boot-vault-ssl-bundle-test-app</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>${revision}</version>
 	<packaging>jar</packaging>
 
 	<name>Vault SSL Test Application</name>
@@ -68,7 +68,7 @@
 		<dependency>
 			<groupId>com.demo</groupId>
 			<artifactId>spring-boot-vault-ssl-bundle</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<!-- HTTP Client for testing SSL connections -->
