@@ -6,8 +6,8 @@
 	<artifactId>spring-boot-vault-ssl-bundle-parent-project</artifactId>
 	<version>${revision}</version>
 	<packaging>pom</packaging>
-	<name>demo</name>
-	<description>Demo project for Spring Boot</description>
+	<name>spring-boot-vault-ssl-bundle-parent-project</name>
+	<description>spring-boot-vault-ssl-bundle-parent-project</description>
 
 
 	<properties>
