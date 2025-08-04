@@ -93,37 +93,37 @@ public class TestController {
     /**
      * Test SSL connection to another service
      */
-    @GetMapping("/test-ssl-connection")
-    public ResponseEntity<Map<String, Object>> testSslConnection() {
-        Map<String, Object> response = new HashMap<>();
-
-        try {
-            // Create WebClient with SSL bundle
-            var bundle = sslBundles.getBundle("vault:secret/ssl-certs/server-a");
-            var sslContext = bundle.createSslContext();
-
-            WebClient client = WebClient.builder().clientConnector(new org.springframework.http.client.reactive.ReactorClientHttpConnector(reactor.netty.http.client.HttpClient.create().secure(spec -> spec.sslContext(sslContext)))).build();
-
-            // Make a test request
-            String result = client.get().uri(serverBUrl + "/api/test/health").retrieve().bodyToMono(String.class).block();
-
-            response.put("status", "SUCCESS");
-            response.put("targetUrl", serverBUrl);
-            response.put("connectionResult", "Connected successfully");
-            response.put("responseData", result);
-
-            logger.info("SSL connection test successful to: {}", serverBUrl);
-
-        } catch (Exception e) {
-            logger.error("SSL connection test failed", e);
-            response.put("status", "ERROR");
-            response.put("targetUrl", serverBUrl);
-            response.put("error", e.getMessage());
-            response.put("connectionResult", "Connection failed");
-        }
-
-        return ResponseEntity.ok(response);
-    }
+//    @GetMapping("/test-ssl-connection")
+//    public ResponseEntity<Map<String, Object>> testSslConnection() {
+//        Map<String, Object> response = new HashMap<>();
+//
+//        try {
+//            // Create WebClient with SSL bundle
+//            var bundle = sslBundles.getBundle("vault:secret/ssl-certs/server-a");
+//            var sslContext = bundle.createSslContext();
+//
+//            WebClient client = WebClient.builder().clientConnector(new org.springframework.http.client.reactive.ReactorClientHttpConnector(reactor.netty.http.client.HttpClient.create().secure(spec -> spec.sslContext(sslContext)))).build();
+//
+//            // Make a test request
+//            String result = client.get().uri(serverBUrl + "/api/test/health").retrieve().bodyToMono(String.class).block();
+//
+//            response.put("status", "SUCCESS");
+//            response.put("targetUrl", serverBUrl);
+//            response.put("connectionResult", "Connected successfully");
+//            response.put("responseData", result);
+//
+//            logger.info("SSL connection test successful to: {}", serverBUrl);
+//
+//        } catch (Exception e) {
+//            logger.error("SSL connection test failed", e);
+//            response.put("status", "ERROR");
+//            response.put("targetUrl", serverBUrl);
+//            response.put("error", e.getMessage());
+//            response.put("connectionResult", "Connection failed");
+//        }
+//
+//        return ResponseEntity.ok(response);
+//    }
 
     /**
      * Get current SSL session information

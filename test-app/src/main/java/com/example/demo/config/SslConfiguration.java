@@ -1,6 +1,7 @@
 package com.example.demo.config;
 
 
+import io.netty.handler.ssl.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ssl.SslBundles;
@@ -28,10 +29,26 @@ public class SslConfiguration {
     public WebClient secureWebClient(SslBundles sslBundles) {
         try {
             var bundle = sslBundles.getBundle("vault:secret/ssl-certs/server-a");
-            var sslContext = bundle.createSslContext();
+//            var sslContext = bundle.createSslContext();
 
-            HttpClient httpClient = HttpClient.create()
-                    .secure(spec -> spec.sslContext(sslContext));
+//            HttpClient httpClient = HttpClient.create()
+//                    .secure(spec -> spec.sslContext(sslContext));
+
+
+            javax.net.ssl.SSLContext jdkSslContext = bundle.createSslContext();
+
+            SslContext nettySslContext = new JdkSslContext(
+                    jdkSslContext,
+                    /* isClient */ true,
+                    null,   // cipher suites (null = default)
+                    IdentityCipherSuiteFilter.INSTANCE,
+                    ApplicationProtocolConfig.DISABLED,
+                    ClientAuth.NONE,
+                    null,   // protocols
+                    false   // startTls
+            );
+
+            HttpClient httpClient = HttpClient.create().secure(spec -> spec.sslContext(nettySslContext));
 
             ReactorClientHttpConnector connector = new ReactorClientHttpConnector(httpClient);
 
@@ -53,17 +70,19 @@ public class SslConfiguration {
     @Bean("insecureWebClient")
     public WebClient insecureWebClient() {
         try {
+            var sslContext = io.netty.handler.ssl.SslContextBuilder
+                    .forClient()
+                    .trustManager(io.netty.handler.ssl.util.InsecureTrustManagerFactory.INSTANCE)
+                    .build();
+
             HttpClient httpClient = HttpClient.create()
-                    .secure(spec -> spec.trustManager(
-                            io.netty.handler.ssl.util.InsecureTrustManagerFactory.INSTANCE));
+                    .secure(spec -> spec.sslContext(sslContext));
 
             ReactorClientHttpConnector connector = new ReactorClientHttpConnector(httpClient);
 
             logger.warn("Configured INSECURE WebClient - DO NOT USE IN PRODUCTION");
 
-            return WebClient.builder()
-                    .clientConnector(connector)
-                    .build();
+            return WebClient.builder().clientConnector(connector).build();
 
         } catch (Exception e) {
             logger.error("Failed to configure insecure WebClient", e);
