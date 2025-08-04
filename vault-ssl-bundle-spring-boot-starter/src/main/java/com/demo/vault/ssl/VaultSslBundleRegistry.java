@@ -2,9 +2,10 @@ package com.demo.vault.ssl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.ssl.NoSuchSslBundleException;
 import org.springframework.boot.ssl.SslBundle;
 import org.springframework.boot.ssl.SslBundleRegistry;
-import org.springframework.cloud.vault.config.VaultOperations;
+import org.springframework.vault.core.VaultTemplate;
 import org.springframework.vault.support.VaultResponse;
 
 import java.io.ByteArrayInputStream;
@@ -23,14 +24,14 @@ public class VaultSslBundleRegistry implements SslBundleRegistry {
 
     private static final Logger logger = LoggerFactory.getLogger(VaultSslBundleRegistry.class);
 
-    private final VaultOperations vaultOperations;
+    private final VaultTemplate vaultTemplate;
     private final Map<String, SslBundle> bundles = new ConcurrentHashMap<>();
 
-    public VaultSslBundleRegistry(VaultOperations vaultOperations) {
-        this.vaultOperations = vaultOperations;
+    public VaultSslBundleRegistry(VaultTemplate vaultTemplate) {
+        this.vaultTemplate = vaultTemplate;
     }
 
-    @Override
+//    @Override
     public SslBundle getBundle(String bundleName) {
         logger.debug("Requesting SSL bundle: {}", bundleName);
 
@@ -48,7 +49,7 @@ public class VaultSslBundleRegistry implements SslBundleRegistry {
             String vaultPath = bundleName.substring(6);
             logger.debug("Loading SSL bundle from Vault path: {}", vaultPath);
 
-            VaultResponse response = vaultOperations.read(vaultPath);
+            VaultResponse response = vaultTemplate.read(vaultPath);
             if (response == null || response.getData() == null) {
                 throw new RuntimeException("No SSL certificate data found at Vault path: " + vaultPath);
             }
@@ -74,9 +75,7 @@ public class VaultSslBundleRegistry implements SslBundleRegistry {
         try {
             // Parse certificate
             CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
-            X509Certificate cert = (X509Certificate) certFactory.generateCertificate(
-                    new ByteArrayInputStream(certificatePem.getBytes())
-            );
+            X509Certificate cert = (X509Certificate) certFactory.generateCertificate(new ByteArrayInputStream(certificatePem.getBytes()));
 
             // Parse private key
             PrivateKey privKey = parsePrivateKey(privateKeyPem);
@@ -84,17 +83,14 @@ public class VaultSslBundleRegistry implements SslBundleRegistry {
             // Parse CA certificate if present
             X509Certificate caCert = null;
             if (caCertificatePem != null && !caCertificatePem.trim().isEmpty()) {
-                caCert = (X509Certificate) certFactory.generateCertificate(
-                        new ByteArrayInputStream(caCertificatePem.getBytes())
-                );
+                caCert = (X509Certificate) certFactory.generateCertificate(new ByteArrayInputStream(caCertificatePem.getBytes()));
             }
 
             // Create KeyStore for the key material
             KeyStore keyStore = KeyStore.getInstance("PKCS12");
             keyStore.load(null, null);
 
-            Certificate[] certChain = caCert != null ?
-                    new Certificate[]{cert, caCert} : new Certificate[]{cert};
+            Certificate[] certChain = caCert != null ? new Certificate[]{cert, caCert} : new Certificate[]{cert};
 
             keyStore.setKeyEntry("vault-ssl", privKey, "changeit".toCharArray(), certChain);
 
@@ -117,17 +113,11 @@ public class VaultSslBundleRegistry implements SslBundleRegistry {
     private PrivateKey parsePrivateKey(String privateKeyPem) {
         try {
             // Remove PEM headers and decode
-            String keyData = privateKeyPem
-                    .replace("-----BEGIN PRIVATE KEY-----", "")
-                    .replace("-----END PRIVATE KEY-----", "")
-                    .replace("-----BEGIN RSA PRIVATE KEY-----", "")
-                    .replace("-----END RSA PRIVATE KEY-----", "")
-                    .replaceAll("\\s", "");
+            String keyData = privateKeyPem.replace("-----BEGIN PRIVATE KEY-----", "").replace("-----END PRIVATE KEY-----", "").replace("-----BEGIN RSA PRIVATE KEY-----", "").replace("-----END RSA PRIVATE KEY-----", "").replaceAll("\\s", "");
 
             byte[] keyBytes = java.util.Base64.getDecoder().decode(keyData);
 
-            java.security.spec.PKCS8EncodedKeySpec keySpec =
-                    new java.security.spec.PKCS8EncodedKeySpec(keyBytes);
+            java.security.spec.PKCS8EncodedKeySpec keySpec = new java.security.spec.PKCS8EncodedKeySpec(keyBytes);
 
             java.security.KeyFactory keyFactory = java.security.KeyFactory.getInstance("RSA");
             return keyFactory.generatePrivate(keySpec);
@@ -135,5 +125,15 @@ public class VaultSslBundleRegistry implements SslBundleRegistry {
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse private key", e);
         }
+    }
+
+    @Override
+    public void registerBundle(String name, SslBundle bundle) {
+
+    }
+
+    @Override
+    public void updateBundle(String name, SslBundle updatedBundle) throws NoSuchSslBundleException {
+
     }
 }

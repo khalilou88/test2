@@ -1,8 +1,6 @@
 package com.demo.vault.ssl;
 
-import org.springframework.boot.ssl.SslBundle;
-import org.springframework.boot.ssl.SslManagerBundle;
-import org.springframework.boot.ssl.SslStoreBundle;
+import org.springframework.boot.ssl.*;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
@@ -32,6 +30,21 @@ public class VaultSslBundle implements SslBundle {
     @Override
     public SslStoreBundle getStores() {
         return storeBundle;
+    }
+
+    @Override
+    public SslBundleKey getKey() {
+        return null;
+    }
+
+    @Override
+    public SslOptions getOptions() {
+        return null;
+    }
+
+    @Override
+    public String getProtocol() {
+        return "";
     }
 
     @Override
@@ -90,6 +103,11 @@ public class VaultSslBundle implements SslBundle {
         }
 
         @Override
+        public KeyManagerFactory getKeyManagerFactory() {
+            return null;
+        }
+
+        @Override
         public TrustManager[] getTrustManagers() {
             try {
                 TrustManagerFactory factory = TrustManagerFactory.getInstance(
@@ -99,6 +117,11 @@ public class VaultSslBundle implements SslBundle {
             } catch (Exception e) {
                 throw new RuntimeException("Failed to create TrustManagers", e);
             }
+        }
+
+        @Override
+        public TrustManagerFactory getTrustManagerFactory() {
+            return null;
         }
     }
 }

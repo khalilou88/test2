@@ -6,6 +6,8 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.ssl.DefaultSslBundleRegistry;
+import org.springframework.boot.ssl.NoSuchSslBundleException;
+import org.springframework.boot.ssl.SslBundle;
 import org.springframework.boot.ssl.SslBundleRegistry;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
@@ -47,12 +49,15 @@ public class VaultSslBundleRegistrar implements BeanFactoryPostProcessor, Ordere
             this.beanFactory = beanFactory;
         }
 
-        @Override
+//        @Override
         public org.springframework.boot.ssl.SslBundle getBundle(String bundleName) {
             if (bundleName.startsWith("vault:")) {
                 return getVaultRegistry().getBundle(bundleName);
             } else {
-                return getDefaultRegistry().getBundle(bundleName);
+                //TODO
+//                return getDefaultRegistry().getBundle(bundleName);
+                System.out.println("return getDefaultRegistry().getBundle(bundleName);");
+                throw new RuntimeException("return getDefaultRegistry().getBundle(bundleName);");
             }
         }
 
@@ -73,6 +78,16 @@ public class VaultSslBundleRegistrar implements BeanFactoryPostProcessor, Ordere
                 vaultRegistry = beanFactory.getBean(VaultSslBundleRegistry.class);
             }
             return vaultRegistry;
+        }
+
+        @Override
+        public void registerBundle(String name, SslBundle bundle) {
+
+        }
+
+        @Override
+        public void updateBundle(String name, SslBundle updatedBundle) throws NoSuchSslBundleException {
+
         }
     }
 }
