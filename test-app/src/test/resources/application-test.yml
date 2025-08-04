@@ -1,0 +1,16 @@
+server:
+  port: 0  # Random port for tests
+  ssl:
+    enabled: false  # Disable SSL for tests
+
+spring:
+  cloud:
+    vault:
+      enabled: false  # Disable Vault for basic tests
+
+# Test logging
+logging:
+  level:
+    com.demo: DEBUG
+    org.springframework.vault: INFO
+    org.springframework.test: INFO

@@ -1,0 +1,60 @@
+server:
+  port: 8443
+  ssl:
+    enabled: true
+    bundle: "vault:secret/ssl-certs/server-a"
+
+spring:
+  application:
+    name: vault-ssl-test-app
+  cloud:
+    vault:
+      host: localhost
+      port: 8200
+      scheme: http
+      authentication: TOKEN
+      token: demo-root-token
+      kv:
+        enabled: true
+        backend: secret
+        default-context: ssl-certs
+      ssl:
+        trust-store: classpath:vault-truststore.jks
+        trust-store-password: changeit
+
+# Management endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,env,beans,configprops
+  endpoint:
+    health:
+      show-details: always
+  server:
+    port: 8444
+    ssl:
+      enabled: false
+
+# Application specific configuration
+app:
+  server-b:
+    url: https://localhost:8444
+  ssl:
+    verify-hostname: false
+    trust-all-certs: false
+
+# Logging configuration
+logging:
+  level:
+    root: INFO
+    com.demo: DEBUG
+    org.springframework.vault: DEBUG
+    org.springframework.cloud.vault: DEBUG
+    org.springframework.boot.ssl: DEBUG
+    org.springframework.web.reactive.function.client: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    n: logs/vault-ssl-test.log
