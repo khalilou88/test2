@@ -1,0 +1,3 @@
+# Auto Configuration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.demo.vault.ssl.autoconfigure.VaultSslBundleAutoConfiguration
