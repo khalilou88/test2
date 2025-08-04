@@ -7,7 +7,7 @@
 
 	<parent>
 		<groupId>com.demo</groupId>
-		<artifactId>parent-project</artifactId>
+		<artifactId>spring-boot-vault-ssl-bundle-parent-project</artifactId>
 		<version>${revision}</version>
 	</parent>
 
