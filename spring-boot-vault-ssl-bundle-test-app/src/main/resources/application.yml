@@ -1,8 +1,8 @@
 server:
   port: 8443
-#  ssl:
-#    enabled: true
-#    bundle: "vault:secret/ssl-certs/server-a"
+  ssl:
+    enabled: true
+    bundle: "secret/data/ssl-certs/server-a"
 
 spring:
   application:
