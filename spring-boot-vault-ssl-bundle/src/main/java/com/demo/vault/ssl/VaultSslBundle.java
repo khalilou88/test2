@@ -13,7 +13,7 @@ public class VaultSslBundle implements SslBundle {
     private final SslBundleKey key;
 
     public VaultSslBundle(String certificate, String privateKey, String caCertificate) {
-        this.key = SslBundleKey.of(privateKey);
+        this.key = SslBundleKey.of("");
         this.stores = createStoreBundle(certificate, privateKey, caCertificate);
     }
 
