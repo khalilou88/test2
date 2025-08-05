@@ -42,8 +42,8 @@
 	</dependencyManagement>
 
 	<modules>
-		<module>spring-boot-vault-ssl-bundle</module>
-		<module>spring-boot-vault-ssl-bundle-test-app</module>
+		<module>spring-vault-ssl-bundle</module>
+		<module>spring-vault-ssl-bundle-test-app</module>
 	</modules>
 
 	<build>
@@ -57,7 +57,7 @@
 						<palantirJavaFormat/>
 						<removeUnusedImports/>
 					</java>
-					<xml>
+					<pom>
 						<includes>
 							<include>pom.xml</include>
 						</includes>
@@ -65,7 +65,7 @@
 							<expandEmptyElements>false</expandEmptyElements>
 							<sortDependencies>scope,groupId,artifactId</sortDependencies>
 						</sortPom>
-					</xml>
+					</pom>
 				</configuration>
 				<executions>
 					<execution>
