@@ -28,15 +28,14 @@ public class VaultSslBundleRegistry implements SslBundleRegistry, SslBundles {
 
         logger.debug("RegisterBundle: {}", name);
 
-
-//        logger.debug("Requesting SSL bundle: {}", name);
-//
-//        // Check if bundle name starts with "vault:" protocol
-//        if (!name.startsWith("vault:")) {
-//            throw new IllegalArgumentException("Bundle name must start with 'vault:' protocol");
-//        }
-//
-//        bundles.computeIfAbsent(name, this::loadBundleFromVault);
+        //        logger.debug("Requesting SSL bundle: {}", name);
+        //
+        //        // Check if bundle name starts with "vault:" protocol
+        //        if (!name.startsWith("vault:")) {
+        //            throw new IllegalArgumentException("Bundle name must start with 'vault:' protocol");
+        //        }
+        //
+        //        bundles.computeIfAbsent(name, this::loadBundleFromVault);
     }
 
     @Override
@@ -63,7 +62,6 @@ public class VaultSslBundleRegistry implements SslBundleRegistry, SslBundles {
             String certificate = (String) certificateData.get("certificate");
             String privateKey = (String) certificateData.get("private-key");
             String caCertificate = (String) certificateData.get("ca-certificate");
-
 
             if (certificate == null || privateKey == null) {
                 throw new RuntimeException("Missing required certificate or private_key in Vault data");
