@@ -1,4 +1,4 @@
-package com.example.demo.health;
+package dev.grida.demo.health;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
