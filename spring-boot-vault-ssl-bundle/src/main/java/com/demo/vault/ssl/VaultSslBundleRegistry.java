@@ -77,10 +77,9 @@ public class VaultSslBundleRegistry implements SslBundleRegistry, SslBundles {
 
     @Override
     public SslBundle getBundle(String name) throws NoSuchSslBundleException {
-//        return this.bundles.get(name);
+        //        return this.bundles.get(name);
 
         logger.debug("Requesting SSL bundle: {}", name);
-
 
         return bundles.computeIfAbsent(name, this::loadBundleFromVault);
     }

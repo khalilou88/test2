@@ -27,7 +27,6 @@ public class VaultHealthIndicator implements HealthIndicator {
             // Test basic Vault connectivity
             var sysHealth = vaultTemplate.opsForSys().health();
 
-
             // Test SSL certificate path accessibility
             var sslData = vaultTemplate.read("secret/data/ssl-certs/server-a");
 
