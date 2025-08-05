@@ -19,28 +19,6 @@ spring:
         backend: secret
         default-context: ssl-certs
 
-# Management endpoints
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,env,beans,configprops
-  endpoint:
-    health:
-      show-details: always
-  server:
-    port: 8444
-    ssl:
-      enabled: false
-
-# Application specific configuration
-app:
-  server-b:
-    url: https://localhost:8444
-  ssl:
-    verify-hostname: false
-    trust-all-certs: false
-
 # Logging configuration
 logging:
   level:
