@@ -1,11 +1,5 @@
 package com.demo.vault.ssl;
 
-import java.io.ByteArrayInputStream;
-import java.security.KeyStore;
-import java.security.PrivateKey;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
@@ -42,7 +36,9 @@ public class VaultSslBundleRegistry implements SslBundleRegistry, SslBundles {
     }
 
     @Override
-    public void updateBundle(String name, SslBundle updatedBundle) throws NoSuchSslBundleException {}
+    public void updateBundle(String name, SslBundle updatedBundle) throws NoSuchSslBundleException {
+        bundles.put(name, updatedBundle);
+    }
 
     private SslBundle loadBundleFromVault(String bundleName) {
         try {
@@ -60,78 +56,18 @@ public class VaultSslBundleRegistry implements SslBundleRegistry, SslBundles {
             String privateKey = (String) data.get("private_key");
             String caCertificate = (String) data.get("ca_certificate");
 
+            // TODO check this field
+            String keyPassword = (String) data.get("key_password");
+
             if (certificate == null || privateKey == null) {
                 throw new RuntimeException("Missing required certificate or private_key in Vault data");
             }
 
-            return createSslBundle(certificate, privateKey, caCertificate);
+            return new VaultSslBundle(certificate, privateKey, caCertificate, keyPassword);
 
         } catch (Exception e) {
             logger.error("Failed to load SSL bundle from Vault: {}", bundleName, e);
             throw new RuntimeException("Failed to load SSL bundle: " + bundleName, e);
-        }
-    }
-
-    private SslBundle createSslBundle(String certificatePem, String privateKeyPem, String caCertificatePem) {
-        try {
-            // Parse certificate
-            CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
-            X509Certificate cert = (X509Certificate)
-                    certFactory.generateCertificate(new ByteArrayInputStream(certificatePem.getBytes()));
-
-            // Parse private key
-            PrivateKey privKey = parsePrivateKey(privateKeyPem);
-
-            // Parse CA certificate if present
-            X509Certificate caCert = null;
-            if (caCertificatePem != null && !caCertificatePem.trim().isEmpty()) {
-                caCert = (X509Certificate)
-                        certFactory.generateCertificate(new ByteArrayInputStream(caCertificatePem.getBytes()));
-            }
-
-            // Create KeyStore for the key material
-            KeyStore keyStore = KeyStore.getInstance("PKCS12");
-            keyStore.load(null, null);
-
-            Certificate[] certChain = caCert != null ? new Certificate[] {cert, caCert} : new Certificate[] {cert};
-
-            keyStore.setKeyEntry("vault-ssl", privKey, "changeit".toCharArray(), certChain);
-
-            // Create trust store
-            KeyStore trustStore = KeyStore.getInstance("PKCS12");
-            trustStore.load(null, null);
-
-            if (caCert != null) {
-                trustStore.setCertificateEntry("vault-ca", caCert);
-            }
-            trustStore.setCertificateEntry("vault-cert", cert);
-
-            return new VaultSslBundle(keyStore, trustStore, "changeit");
-
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to create SSL bundle from Vault data", e);
-        }
-    }
-
-    private PrivateKey parsePrivateKey(String privateKeyPem) {
-        try {
-            // Remove PEM headers and decode
-            String keyData = privateKeyPem
-                    .replace("-----BEGIN PRIVATE KEY-----", "")
-                    .replace("-----END PRIVATE KEY-----", "")
-                    .replace("-----BEGIN RSA PRIVATE KEY-----", "")
-                    .replace("-----END RSA PRIVATE KEY-----", "")
-                    .replaceAll("\\s", "");
-
-            byte[] keyBytes = java.util.Base64.getDecoder().decode(keyData);
-
-            java.security.spec.PKCS8EncodedKeySpec keySpec = new java.security.spec.PKCS8EncodedKeySpec(keyBytes);
-
-            java.security.KeyFactory keyFactory = java.security.KeyFactory.getInstance("RSA");
-            return keyFactory.generatePrivate(keySpec);
-
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to parse private key", e);
         }
     }
 
