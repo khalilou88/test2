@@ -8,13 +8,15 @@
     <version>${revision}</version>
   </parent>
 
-  <groupId>dev.grida</groupId>
   <artifactId>spring-vault-ssl-bundle-test-app</artifactId>
   <version>${revision}</version>
   <packaging>jar</packaging>
 
-  <name>Vault SSL Test Application</name>
-  <description>Test application for Vault SSL Bundle Spring Boot Starter</description>
+	<name>Spring Vault SSL Bundle - Test Application</name>
+	<description>
+		A sample Spring Boot application used to test and demonstrate the functionality
+		of the Vault SSL Bundle starter integration.
+	</description>
 
   <dependencies>
 
@@ -24,12 +26,6 @@
       <artifactId>spring-boot-vault-ssl-bundle</artifactId>
       <version>${project.version}</version>
     </dependency>
-
-    <!-- HTTP Client for testing SSL connections -->
-    <!--dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webflux</artifactId>
-		</dependency-->
 
     <!-- JSON processing -->
     <dependency>
@@ -61,24 +57,7 @@
       <optional>true</optional>
     </dependency>
 
-    <!-- Test Dependencies -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
-
-  <repositories>
-    <repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>spring-milestones</id>
-      <name>Spring Milestones</name>
-      <url>https://repo.spring.io/milestone</url>
-    </repository>
-  </repositories>
 
   <build>
     <plugins>
@@ -86,13 +65,6 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <version>${spring-boot.version}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>repackage</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
 
       <plugin>
@@ -103,13 +75,6 @@
           <source>${java.version}</source>
           <target>${java.version}</target>
         </configuration>
-      </plugin>
-
-      <!-- Maven Surefire Plugin for tests -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.0.0</version>
       </plugin>
     </plugins>
   </build>
