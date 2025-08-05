@@ -22,6 +22,6 @@ spring:
 # Logging configuration
 logging:
   level:
-    com.demo: DEBUG
     org.springframework.vault: DEBUG
-    org.springframework.cloud.vault: DEBUG
+    org.springframework.web.client.RestTemplate: DEBUG
+    org.springframework.http.client: DEBUG
