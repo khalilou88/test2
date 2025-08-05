@@ -1,4 +1,4 @@
-# Spring Boot Vault SSL Bundle
+# Spring  Vault SSL Bundle
 
 This Spring Boot starter enables loading SSL certificates from HashiCorp Vault using the `vault:` protocol in your SSL bundle configuration.
 
