@@ -5,8 +5,11 @@
   <artifactId>spring-vault-ssl-bundle-parent-project</artifactId>
   <version>${revision}</version>
   <packaging>pom</packaging>
-  <name>spring-vault-ssl-bundle-parent-project</name>
-  <description>spring-vault-ssl-bundle-parent-project</description>
+  <name>Spring Vault SSL Bundle - Parent Project</name>
+  <description>
+    A parent POM for the Spring Boot integration that enables SSL bundle support
+    with HashiCorp Vault for secure certificate management and rotation.
+  </description>
 
   <modules>
     <module>spring-vault-ssl-bundle</module>
