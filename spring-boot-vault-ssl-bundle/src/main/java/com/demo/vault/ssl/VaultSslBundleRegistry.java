@@ -46,28 +46,30 @@ public class VaultSslBundleRegistry implements SslBundleRegistry, SslBundles {
 
     private SslBundle loadBundleFromVault(String bundleName) {
         try {
-            // Extract vault path from bundle name (remove "vault:" prefix)
-            String vaultPath = bundleName.substring(6);
-            logger.debug("Loading SSL bundle from Vault path: {}", vaultPath);
 
-            VaultResponse response = vaultTemplate.read(vaultPath);
+            logger.debug("Loading SSL bundle from Vault path: {}", bundleName);
+
+            VaultResponse response = vaultTemplate.read(bundleName);
             if (response == null || response.getData() == null) {
-                throw new RuntimeException("No SSL certificate data found at Vault path: " + vaultPath);
+                throw new RuntimeException("No SSL certificate data found at Vault path: " + bundleName);
             }
 
             Map<String, Object> data = response.getData();
-            String certificate = (String) data.get("certificate");
-            String privateKey = (String) data.get("private_key");
-            String caCertificate = (String) data.get("ca_certificate");
 
-            // TODO check this field
-            String keyPassword = (String) data.get("key_password");
+            // The actual certificate data is nested under "data" key for KV v2
+            @SuppressWarnings("unchecked")
+            Map<String, Object> certificateData = (Map<String, Object>) data.get("data");
+
+            String certificate = (String) certificateData.get("certificate");
+            String privateKey = (String) certificateData.get("private-key");
+            String caCertificate = (String) certificateData.get("ca-certificate");
+
 
             if (certificate == null || privateKey == null) {
                 throw new RuntimeException("Missing required certificate or private_key in Vault data");
             }
 
-            return new VaultSslBundle(certificate, privateKey, caCertificate, keyPassword);
+            return new VaultSslBundle(certificate, privateKey, caCertificate);
 
         } catch (Exception e) {
             logger.error("Failed to load SSL bundle from Vault: {}", bundleName, e);
@@ -81,10 +83,6 @@ public class VaultSslBundleRegistry implements SslBundleRegistry, SslBundles {
 
         logger.debug("Requesting SSL bundle: {}", name);
 
-        // Check if bundle name starts with "vault:" protocol
-        if (!name.startsWith("vault:")) {
-            throw new IllegalArgumentException("Bundle name must start with 'vault:' protocol");
-        }
 
         return bundles.computeIfAbsent(name, this::loadBundleFromVault);
     }

@@ -12,8 +12,8 @@ public class VaultSslBundle implements SslBundle {
     private final SslStoreBundle stores;
     private final SslBundleKey key;
 
-    public VaultSslBundle(String certificate, String privateKey, String caCertificate, String keyPassword) {
-        this.key = SslBundleKey.of(keyPassword);
+    public VaultSslBundle(String certificate, String privateKey, String caCertificate) {
+        this.key = SslBundleKey.of(privateKey);
         this.stores = createStoreBundle(certificate, privateKey, caCertificate);
     }
 
@@ -41,7 +41,7 @@ public class VaultSslBundle implements SslBundle {
 
     @Override
     public SslOptions getOptions() {
-        return null;
+        return SslOptions.NONE;
     }
 
     @Override
