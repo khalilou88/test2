@@ -8,13 +8,13 @@
     <version>${revision}</version>
   </parent>
 
-  <groupId>dev.grida</groupId>
   <artifactId>spring-vault-ssl-bundle</artifactId>
   <version>${revision}</version>
   <packaging>jar</packaging>
 
-  <name>Vault SSL Bundle Spring Boot Starter</name>
-  <description>Spring Boot starter for loading SSL bundles from HashiCorp Vault</description>
+  <name>Spring Vault SSL Bundle Starter</name>
+  <description>A Spring Boot starter that enables secure loading and automatic reloading of SSL bundles
+    (certificates, keys, trust stores) from HashiCorp Vault using Spring Boot's SSL Bundle support.</description>
 
   <dependencies>
 
@@ -57,23 +57,4 @@
     </dependency>
   </dependencies>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>${spring-boot.version}</version>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.11.0</version>
-        <configuration>
-          <source>${java.version}</source>
-          <target>${java.version}</target>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 </project>
