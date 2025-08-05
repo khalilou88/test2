@@ -48,17 +48,20 @@ public class VaultSslBundleRegistrar implements BeanFactoryPostProcessor, Ordere
             this.beanFactory = beanFactory;
         }
 
-        //        @Override
-        public org.springframework.boot.ssl.SslBundle getBundle(String bundleName) {
-            if (bundleName.startsWith("vault:")) {
-                return getVaultRegistry().getBundle(bundleName);
+        @Override
+        public void registerBundle(String name, SslBundle bundle) {
+
+            if (name.startsWith("vault:")) {
+                logger.debug("Delegating to vault bundles for bundle: {}", name);
+                getVaultRegistry().registerBundle(name, bundle);
             } else {
-                // TODO
-                //                return getDefaultRegistry().getBundle(bundleName);
-                System.out.println("return getDefaultRegistry().getBundle(bundleName);");
-                throw new RuntimeException("return getDefaultRegistry().getBundle(bundleName);");
+                logger.debug("Delegating to default bundles for bundle: {}", name);
+                getDefaultRegistry().registerBundle(name, bundle);
             }
         }
+
+        @Override
+        public void updateBundle(String name, SslBundle updatedBundle) throws NoSuchSslBundleException {}
 
         private SslBundleRegistry getDefaultRegistry() {
             if (defaultRegistry == null) {
@@ -66,7 +69,7 @@ public class VaultSslBundleRegistrar implements BeanFactoryPostProcessor, Ordere
                     defaultRegistry = beanFactory.getBean(DefaultSslBundleRegistry.class);
                 } catch (Exception e) {
                     logger.warn("Could not find DefaultSslBundleRegistry, creating new instance");
-                    defaultRegistry = new DefaultSslBundleRegistry();
+                    //                    defaultRegistry = new DefaultSslBundleRegistry();
                 }
             }
             return defaultRegistry;
@@ -74,15 +77,15 @@ public class VaultSslBundleRegistrar implements BeanFactoryPostProcessor, Ordere
 
         private VaultSslBundleRegistry getVaultRegistry() {
             if (vaultRegistry == null) {
-                vaultRegistry = beanFactory.getBean(VaultSslBundleRegistry.class);
+                try {
+                    vaultRegistry = beanFactory.getBean(VaultSslBundleRegistry.class);
+
+                } catch (Exception e) {
+                    logger.warn("Could not find VaultSslBundleRegistry, creating new instance");
+                    //                    vaultRegistry = new VaultSslBundleRegistry(null);
+                }
             }
             return vaultRegistry;
         }
-
-        @Override
-        public void registerBundle(String name, SslBundle bundle) {}
-
-        @Override
-        public void updateBundle(String name, SslBundle updatedBundle) throws NoSuchSslBundleException {}
     }
 }

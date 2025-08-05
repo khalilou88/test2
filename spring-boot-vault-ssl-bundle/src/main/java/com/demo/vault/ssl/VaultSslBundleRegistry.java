@@ -8,18 +8,17 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.ssl.NoSuchSslBundleException;
-import org.springframework.boot.ssl.SslBundle;
-import org.springframework.boot.ssl.SslBundleRegistry;
+import org.springframework.boot.ssl.*;
 import org.springframework.vault.core.VaultTemplate;
 import org.springframework.vault.support.VaultResponse;
 
 /**
  * Registry for managing SSL bundles loaded from HashiCorp Vault.
  */
-public class VaultSslBundleRegistry implements SslBundleRegistry {
+public class VaultSslBundleRegistry implements SslBundleRegistry, SslBundles {
 
     private static final Logger logger = LoggerFactory.getLogger(VaultSslBundleRegistry.class);
 
@@ -30,17 +29,20 @@ public class VaultSslBundleRegistry implements SslBundleRegistry {
         this.vaultTemplate = vaultTemplate;
     }
 
-    //    @Override
-    public SslBundle getBundle(String bundleName) {
-        logger.debug("Requesting SSL bundle: {}", bundleName);
+    @Override
+    public void registerBundle(String name, SslBundle bundle) {
+        logger.debug("Requesting SSL bundle: {}", name);
 
         // Check if bundle name starts with "vault:" protocol
-        if (!bundleName.startsWith("vault:")) {
+        if (!name.startsWith("vault:")) {
             throw new IllegalArgumentException("Bundle name must start with 'vault:' protocol");
         }
 
-        return bundles.computeIfAbsent(bundleName, this::loadBundleFromVault);
+        bundles.computeIfAbsent(name, this::loadBundleFromVault);
     }
+
+    @Override
+    public void updateBundle(String name, SslBundle updatedBundle) throws NoSuchSslBundleException {}
 
     private SslBundle loadBundleFromVault(String bundleName) {
         try {
@@ -134,8 +136,11 @@ public class VaultSslBundleRegistry implements SslBundleRegistry {
     }
 
     @Override
-    public void registerBundle(String name, SslBundle bundle) {}
+    public SslBundle getBundle(String name) throws NoSuchSslBundleException {
+        return this.bundles.get(name);
+    }
 
     @Override
-    public void updateBundle(String name, SslBundle updatedBundle) throws NoSuchSslBundleException {}
+    public void addBundleUpdateHandler(String name, Consumer<SslBundle> updateHandler)
+            throws NoSuchSslBundleException {}
 }
