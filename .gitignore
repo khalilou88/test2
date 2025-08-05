@@ -33,3 +33,5 @@ build/
 .vscode/
 
 .flattened-pom.xml
+
+/certificates/
