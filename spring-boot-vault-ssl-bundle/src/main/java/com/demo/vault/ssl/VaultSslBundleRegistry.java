@@ -25,14 +25,18 @@ public class VaultSslBundleRegistry implements SslBundleRegistry, SslBundles {
 
     @Override
     public void registerBundle(String name, SslBundle bundle) {
-        logger.debug("Requesting SSL bundle: {}", name);
 
-        // Check if bundle name starts with "vault:" protocol
-        if (!name.startsWith("vault:")) {
-            throw new IllegalArgumentException("Bundle name must start with 'vault:' protocol");
-        }
+        logger.debug("RegisterBundle: {}", name);
 
-        bundles.computeIfAbsent(name, this::loadBundleFromVault);
+
+//        logger.debug("Requesting SSL bundle: {}", name);
+//
+//        // Check if bundle name starts with "vault:" protocol
+//        if (!name.startsWith("vault:")) {
+//            throw new IllegalArgumentException("Bundle name must start with 'vault:' protocol");
+//        }
+//
+//        bundles.computeIfAbsent(name, this::loadBundleFromVault);
     }
 
     @Override
@@ -73,7 +77,16 @@ public class VaultSslBundleRegistry implements SslBundleRegistry, SslBundles {
 
     @Override
     public SslBundle getBundle(String name) throws NoSuchSslBundleException {
-        return this.bundles.get(name);
+//        return this.bundles.get(name);
+
+        logger.debug("Requesting SSL bundle: {}", name);
+
+        // Check if bundle name starts with "vault:" protocol
+        if (!name.startsWith("vault:")) {
+            throw new IllegalArgumentException("Bundle name must start with 'vault:' protocol");
+        }
+
+        return bundles.computeIfAbsent(name, this::loadBundleFromVault);
     }
 
     @Override
