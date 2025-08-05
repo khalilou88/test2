@@ -1,12 +1,11 @@
 package com.demo.vault.ssl;
 
-import org.springframework.boot.ssl.*;
-
+import java.security.KeyStore;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
-import java.security.KeyStore;
+import org.springframework.boot.ssl.*;
 
 /**
  * SSL Bundle implementation that wraps certificates loaded from Vault.
@@ -93,8 +92,7 @@ public class VaultSslBundle implements SslBundle {
         @Override
         public KeyManager[] getKeyManagers() {
             try {
-                KeyManagerFactory factory = KeyManagerFactory.getInstance(
-                        KeyManagerFactory.getDefaultAlgorithm());
+                KeyManagerFactory factory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
                 factory.init(keyStore, password.toCharArray());
                 return factory.getKeyManagers();
             } catch (Exception e) {
@@ -110,8 +108,8 @@ public class VaultSslBundle implements SslBundle {
         @Override
         public TrustManager[] getTrustManagers() {
             try {
-                TrustManagerFactory factory = TrustManagerFactory.getInstance(
-                        TrustManagerFactory.getDefaultAlgorithm());
+                TrustManagerFactory factory =
+                        TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
                 factory.init(trustStore);
                 return factory.getTrustManagers();
             } catch (Exception e) {

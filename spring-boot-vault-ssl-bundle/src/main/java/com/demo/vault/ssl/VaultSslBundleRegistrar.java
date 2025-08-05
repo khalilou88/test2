@@ -26,8 +26,7 @@ public class VaultSslBundleRegistrar implements BeanFactoryPostProcessor, Ordere
         logger.debug("Registering Vault SSL Bundle support");
 
         // Register a custom SSL bundle registry that can handle vault: protocols
-        beanFactory.registerSingleton("vaultSslBundleRegistryWrapper",
-                new VaultSslBundleRegistryWrapper(beanFactory));
+        beanFactory.registerSingleton("vaultSslBundleRegistryWrapper", new VaultSslBundleRegistryWrapper(beanFactory));
     }
 
     @Override
@@ -49,13 +48,13 @@ public class VaultSslBundleRegistrar implements BeanFactoryPostProcessor, Ordere
             this.beanFactory = beanFactory;
         }
 
-//        @Override
+        //        @Override
         public org.springframework.boot.ssl.SslBundle getBundle(String bundleName) {
             if (bundleName.startsWith("vault:")) {
                 return getVaultRegistry().getBundle(bundleName);
             } else {
-                //TODO
-//                return getDefaultRegistry().getBundle(bundleName);
+                // TODO
+                //                return getDefaultRegistry().getBundle(bundleName);
                 System.out.println("return getDefaultRegistry().getBundle(bundleName);");
                 throw new RuntimeException("return getDefaultRegistry().getBundle(bundleName);");
             }
@@ -81,13 +80,9 @@ public class VaultSslBundleRegistrar implements BeanFactoryPostProcessor, Ordere
         }
 
         @Override
-        public void registerBundle(String name, SslBundle bundle) {
-
-        }
+        public void registerBundle(String name, SslBundle bundle) {}
 
         @Override
-        public void updateBundle(String name, SslBundle updatedBundle) throws NoSuchSslBundleException {
-
-        }
+        public void updateBundle(String name, SslBundle updatedBundle) throws NoSuchSslBundleException {}
     }
 }

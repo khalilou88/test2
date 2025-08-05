@@ -1,6 +1,5 @@
 package com.example.demo.config;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ssl.SslBundles;
@@ -24,23 +23,19 @@ public class SslConfiguration {
     @Bean
     public RestTemplate secureRestTemplate(RestTemplateBuilder restTemplateBuilder, SslBundles sslBundles) {
 
-
         try {
 
-
-            var restTemplate = restTemplateBuilder.setSslBundle(sslBundles.getBundle("vault:secret/ssl-certs/server-a")).build();
+            var restTemplate = restTemplateBuilder
+                    .setSslBundle(sslBundles.getBundle("vault:secret/ssl-certs/server-a"))
+                    .build();
 
             logger.info("Configured secure RestTemplate with Vault SSL bundle");
 
             return restTemplate;
-
 
         } catch (Exception e) {
             logger.error("Failed to configure secure RestTemplate, falling back to default", e);
             return restTemplateBuilder.build();
         }
     }
-
-
-
 }

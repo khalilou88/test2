@@ -1,6 +1,10 @@
 package com.example.demo.controller;
 
-
+import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,12 +12,6 @@ import org.springframework.boot.ssl.SslBundles;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-
-import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Test controller to verify SSL bundle functionality.
@@ -28,7 +26,10 @@ public class TestController {
     private final RestTemplate restTemplate;
     private final String serverBUrl;
 
-    public TestController(SslBundles sslBundles,RestTemplate restTemplate, @Value("${app.server-b.url:https://localhost:8444}") String serverBUrl) {
+    public TestController(
+            SslBundles sslBundles,
+            RestTemplate restTemplate,
+            @Value("${app.server-b.url:https://localhost:8444}") String serverBUrl) {
         this.sslBundles = sslBundles;
         this.restTemplate = restTemplate;
         this.serverBUrl = serverBUrl;
@@ -72,11 +73,14 @@ public class TestController {
             if (keyStore.containsAlias("vault-ssl")) {
                 Certificate cert = keyStore.getCertificate("vault-ssl");
                 if (cert instanceof X509Certificate x509) {
-                    response.put("certificateSubject", x509.getSubjectX500Principal().getName());
-                    response.put("certificateIssuer", x509.getIssuerX500Principal().getName());
+                    response.put(
+                            "certificateSubject", x509.getSubjectX500Principal().getName());
+                    response.put(
+                            "certificateIssuer", x509.getIssuerX500Principal().getName());
                     response.put("certificateNotBefore", x509.getNotBefore());
                     response.put("certificateNotAfter", x509.getNotAfter());
-                    response.put("certificateSerialNumber", x509.getSerialNumber().toString());
+                    response.put(
+                            "certificateSerialNumber", x509.getSerialNumber().toString());
                 }
             }
 
@@ -126,7 +130,8 @@ public class TestController {
      * Get current SSL session information
      */
     @GetMapping("/ssl-session")
-    public ResponseEntity<Map<String, Object>> getSslSession(@RequestHeader(value = "X-SSL-CERT", required = false) String clientCert) {
+    public ResponseEntity<Map<String, Object>> getSslSession(
+            @RequestHeader(value = "X-SSL-CERT", required = false) String clientCert) {
 
         Map<String, Object> response = new HashMap<>();
 

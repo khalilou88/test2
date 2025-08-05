@@ -1,13 +1,5 @@
 package com.demo.vault.ssl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.ssl.NoSuchSslBundleException;
-import org.springframework.boot.ssl.SslBundle;
-import org.springframework.boot.ssl.SslBundleRegistry;
-import org.springframework.vault.core.VaultTemplate;
-import org.springframework.vault.support.VaultResponse;
-
 import java.io.ByteArrayInputStream;
 import java.security.KeyStore;
 import java.security.PrivateKey;
@@ -16,6 +8,13 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.ssl.NoSuchSslBundleException;
+import org.springframework.boot.ssl.SslBundle;
+import org.springframework.boot.ssl.SslBundleRegistry;
+import org.springframework.vault.core.VaultTemplate;
+import org.springframework.vault.support.VaultResponse;
 
 /**
  * Registry for managing SSL bundles loaded from HashiCorp Vault.
@@ -31,7 +30,7 @@ public class VaultSslBundleRegistry implements SslBundleRegistry {
         this.vaultTemplate = vaultTemplate;
     }
 
-//    @Override
+    //    @Override
     public SslBundle getBundle(String bundleName) {
         logger.debug("Requesting SSL bundle: {}", bundleName);
 
@@ -75,7 +74,8 @@ public class VaultSslBundleRegistry implements SslBundleRegistry {
         try {
             // Parse certificate
             CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
-            X509Certificate cert = (X509Certificate) certFactory.generateCertificate(new ByteArrayInputStream(certificatePem.getBytes()));
+            X509Certificate cert = (X509Certificate)
+                    certFactory.generateCertificate(new ByteArrayInputStream(certificatePem.getBytes()));
 
             // Parse private key
             PrivateKey privKey = parsePrivateKey(privateKeyPem);
@@ -83,14 +83,15 @@ public class VaultSslBundleRegistry implements SslBundleRegistry {
             // Parse CA certificate if present
             X509Certificate caCert = null;
             if (caCertificatePem != null && !caCertificatePem.trim().isEmpty()) {
-                caCert = (X509Certificate) certFactory.generateCertificate(new ByteArrayInputStream(caCertificatePem.getBytes()));
+                caCert = (X509Certificate)
+                        certFactory.generateCertificate(new ByteArrayInputStream(caCertificatePem.getBytes()));
             }
 
             // Create KeyStore for the key material
             KeyStore keyStore = KeyStore.getInstance("PKCS12");
             keyStore.load(null, null);
 
-            Certificate[] certChain = caCert != null ? new Certificate[]{cert, caCert} : new Certificate[]{cert};
+            Certificate[] certChain = caCert != null ? new Certificate[] {cert, caCert} : new Certificate[] {cert};
 
             keyStore.setKeyEntry("vault-ssl", privKey, "changeit".toCharArray(), certChain);
 
@@ -113,7 +114,12 @@ public class VaultSslBundleRegistry implements SslBundleRegistry {
     private PrivateKey parsePrivateKey(String privateKeyPem) {
         try {
             // Remove PEM headers and decode
-            String keyData = privateKeyPem.replace("-----BEGIN PRIVATE KEY-----", "").replace("-----END PRIVATE KEY-----", "").replace("-----BEGIN RSA PRIVATE KEY-----", "").replace("-----END RSA PRIVATE KEY-----", "").replaceAll("\\s", "");
+            String keyData = privateKeyPem
+                    .replace("-----BEGIN PRIVATE KEY-----", "")
+                    .replace("-----END PRIVATE KEY-----", "")
+                    .replace("-----BEGIN RSA PRIVATE KEY-----", "")
+                    .replace("-----END RSA PRIVATE KEY-----", "")
+                    .replaceAll("\\s", "");
 
             byte[] keyBytes = java.util.Base64.getDecoder().decode(keyData);
 
@@ -128,12 +134,8 @@ public class VaultSslBundleRegistry implements SslBundleRegistry {
     }
 
     @Override
-    public void registerBundle(String name, SslBundle bundle) {
-
-    }
+    public void registerBundle(String name, SslBundle bundle) {}
 
     @Override
-    public void updateBundle(String name, SslBundle updatedBundle) throws NoSuchSslBundleException {
-
-    }
+    public void updateBundle(String name, SslBundle updatedBundle) throws NoSuchSslBundleException {}
 }

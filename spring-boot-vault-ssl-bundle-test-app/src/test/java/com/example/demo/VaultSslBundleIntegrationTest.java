@@ -1,6 +1,9 @@
 package com.example.demo;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.example.demo.controller.TestController;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.vault.core.VaultTemplate;
-
-import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Integration tests for Vault SSL Bundle functionality.
@@ -53,8 +52,8 @@ class VaultSslBundleIntegrationTest {
 
     @Test
     void healthEndpointReturnsOk() {
-        ResponseEntity<Map> response = restTemplate.getForEntity(
-                "http://localhost:" + port + "/api/test/health", Map.class);
+        ResponseEntity<Map> response =
+                restTemplate.getForEntity("http://localhost:" + port + "/api/test/health", Map.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).containsKey("status");
@@ -77,8 +76,8 @@ class VaultSslBundleIntegrationTest {
 
     @Test
     void sslInfoEndpointReturnsData() {
-        ResponseEntity<Map> response = restTemplate.getForEntity(
-                "http://localhost:" + port + "/api/test/ssl-info", Map.class);
+        ResponseEntity<Map> response =
+                restTemplate.getForEntity("http://localhost:" + port + "/api/test/ssl-info", Map.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).containsKey("status");
@@ -90,8 +89,8 @@ class VaultSslBundleIntegrationTest {
 
     @Test
     void vaultHealthIndicatorWorks() {
-        ResponseEntity<Map> response = restTemplate.getForEntity(
-                "http://localhost:" + port + "/actuator/health", Map.class);
+        ResponseEntity<Map> response =
+                restTemplate.getForEntity("http://localhost:" + port + "/actuator/health", Map.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).containsKey("status");

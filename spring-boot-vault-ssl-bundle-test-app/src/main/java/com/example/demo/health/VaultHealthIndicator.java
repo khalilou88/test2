@@ -1,6 +1,5 @@
 package com.example.demo.health;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.actuate.health.Health;
@@ -31,11 +30,20 @@ public class VaultHealthIndicator implements HealthIndicator {
             // Test SSL certificate path accessibility
             var sslData = vaultTemplate.read("secret/ssl-certs/server-a");
 
-            return Health.up().withDetail("vault.status", "UP").withDetail("vault.initialized", sysHealth.isInitialized()).withDetail("vault.sealed", sysHealth.isSealed()).withDetail("ssl.bundle.available", sslData != null).withDetail("ssl.bundle.path", "secret/ssl-certs/server-a").build();
+            return Health.up()
+                    .withDetail("vault.status", "UP")
+                    .withDetail("vault.initialized", sysHealth.isInitialized())
+                    .withDetail("vault.sealed", sysHealth.isSealed())
+                    .withDetail("ssl.bundle.available", sslData != null)
+                    .withDetail("ssl.bundle.path", "secret/ssl-certs/server-a")
+                    .build();
 
         } catch (Exception e) {
             logger.error("Vault health check failed", e);
-            return Health.down().withDetail("vault.status", "DOWN").withDetail("error", e.getMessage()).build();
+            return Health.down()
+                    .withDetail("vault.status", "DOWN")
+                    .withDetail("error", e.getMessage())
+                    .build();
         }
     }
 }
