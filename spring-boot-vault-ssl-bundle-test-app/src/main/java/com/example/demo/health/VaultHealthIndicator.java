@@ -27,15 +27,16 @@ public class VaultHealthIndicator implements HealthIndicator {
             // Test basic Vault connectivity
             var sysHealth = vaultTemplate.opsForSys().health();
 
+
             // Test SSL certificate path accessibility
-            var sslData = vaultTemplate.read("secret/ssl-certs/server-a");
+            var sslData = vaultTemplate.read("secret/data/ssl-certs/server-a");
 
             return Health.up()
                     .withDetail("vault.status", "UP")
                     .withDetail("vault.initialized", sysHealth.isInitialized())
                     .withDetail("vault.sealed", sysHealth.isSealed())
                     .withDetail("ssl.bundle.available", sslData != null)
-                    .withDetail("ssl.bundle.path", "secret/ssl-certs/server-a")
+                    .withDetail("ssl.bundle.path", "secret/data/ssl-certs/server-a")
                     .build();
 
         } catch (Exception e) {
