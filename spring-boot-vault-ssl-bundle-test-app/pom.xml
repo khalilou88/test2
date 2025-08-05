@@ -49,10 +49,10 @@
 		</dependency>
 
 		<!-- HTTP Client for testing SSL connections -->
-		<dependency>
+		<!--dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webflux</artifactId>
-		</dependency>
+		</dependency-->
 
 		<!-- JSON processing -->
 		<dependency>
