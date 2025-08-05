@@ -1,4 +1,4 @@
-package com.demo.vault.ssl;
+package dev.grida.spring.vault.ssl.bundle;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,15 +27,6 @@ public class VaultSslBundleRegistry implements SslBundleRegistry, SslBundles {
     public void registerBundle(String name, SslBundle bundle) {
 
         logger.debug("RegisterBundle: {}", name);
-
-        //        logger.debug("Requesting SSL bundle: {}", name);
-        //
-        //        // Check if bundle name starts with "vault:" protocol
-        //        if (!name.startsWith("vault:")) {
-        //            throw new IllegalArgumentException("Bundle name must start with 'vault:' protocol");
-        //        }
-        //
-        //        bundles.computeIfAbsent(name, this::loadBundleFromVault);
     }
 
     @Override
@@ -77,7 +68,6 @@ public class VaultSslBundleRegistry implements SslBundleRegistry, SslBundles {
 
     @Override
     public SslBundle getBundle(String name) throws NoSuchSslBundleException {
-        //        return this.bundles.get(name);
 
         logger.debug("Requesting SSL bundle: {}", name);
 

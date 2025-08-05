@@ -1,7 +1,7 @@
-package com.demo.vault.ssl.autoconfigure;
+package dev.grida.spring.vault.ssl.bundle.autoconfigure;
 
-import com.demo.vault.ssl.VaultSslBundleRegistrar;
-import com.demo.vault.ssl.VaultSslBundleRegistry;
+import dev.grida.spring.vault.ssl.bundle.VaultSslBundleRegistrar;
+import dev.grida.spring.vault.ssl.bundle.VaultSslBundleRegistry;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

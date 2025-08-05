@@ -1,4 +1,4 @@
-package com.demo.vault.ssl;
+package dev.grida.spring.vault.ssl.bundle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +69,6 @@ public class VaultSslBundleRegistrar implements BeanFactoryPostProcessor, Ordere
                     defaultRegistry = beanFactory.getBean(DefaultSslBundleRegistry.class);
                 } catch (Exception e) {
                     logger.warn("Could not find DefaultSslBundleRegistry, creating new instance");
-                    //                    defaultRegistry = new DefaultSslBundleRegistry();
                 }
             }
             return defaultRegistry;
@@ -82,7 +81,6 @@ public class VaultSslBundleRegistrar implements BeanFactoryPostProcessor, Ordere
 
                 } catch (Exception e) {
                     logger.warn("Could not find VaultSslBundleRegistry, creating new instance");
-                    //                    vaultRegistry = new VaultSslBundleRegistry(null);
                 }
             }
             return vaultRegistry;
