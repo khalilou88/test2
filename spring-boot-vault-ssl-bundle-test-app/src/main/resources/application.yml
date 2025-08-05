@@ -18,9 +18,6 @@ spring:
         enabled: true
         backend: secret
         default-context: ssl-certs
-      ssl:
-        trust-store: classpath:vault-truststore.jks
-        trust-store-password: changeit
 
 # Management endpoints
 management:
@@ -47,14 +44,6 @@ app:
 # Logging configuration
 logging:
   level:
-    root: INFO
     com.demo: DEBUG
     org.springframework.vault: DEBUG
     org.springframework.cloud.vault: DEBUG
-    org.springframework.boot.ssl: DEBUG
-    org.springframework.web.reactive.function.client: DEBUG
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
-  file:
-    n: logs/vault-ssl-test.log
